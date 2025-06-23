@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Full Project Implementation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background-color: #f5f5f5;
+    }
+    header, footer {
+      background-color: #006666;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+    nav a {
+      margin: 0 10px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    section {
+      background: white;
+      margin: 1rem 0;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    .product, .task {
+      margin: 5px 0;
+      padding: 8px;
+      background: #e0f7fa;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Full Project Implementation</h1>
+    <nav>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#todo">To-Do List</a>
+      <a href="#products">Products</a>
+    </nav>
+  </header>
+
+  <section id="portfolio">
+    <h2>📁 Personal Portfolio</h2>
+    <p>Hello! I'm a developer showcasing my work.</p>
+    <h3>About</h3>
+    <p>I am passionate about web development and programming.</p>
+    <h3>Projects</h3>
+    <ul>
+      <li>To-Do List App</li>
+      <li>Product Listing Page</li>
+    </ul>
+    <h3>Contact</h3>
+    <p>Email: sailaja@gmail.com</p>
+  </section>
+
+
+  <section id="todo">
+    <h2>📝 To-Do List</h2>
+    <input type="text" id="taskInput" placeholder="Enter new task">
+    <button onclick="addTask()">Add</button>
+    <ul id="taskList"></ul>
+  </section>
+
+
+  <section id="products">
+    <h2>🛍️ Product Listing</h2>
+    <label>Filter:
+      <select id="filter" onchange="filterProducts()">
+        <option value="all">All</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Books">Books</option>
+      </select>
+    </label>
+    <div id="productList"></div>
+  </section>
+
+  <footer>
+    &copy; 2025 | Built with HTML, CSS & JS
+  </footer>
+
+  <script>
+    // To-Do List Script
+    const taskList = document.getElementById("taskList");
+
+    function loadTasks() {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      taskList.innerHTML = "";
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.className = "task";
+        li.textContent = task;
+        const btn = document.createElement("button");
+        btn.textContent = "Delete";
+        btn.onclick = () => deleteTask(index);
+        li.appendChild(btn);
+        taskList.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const input = document.getElementById("taskInput");
+      const task = input.value.trim();
+      if (task) {
+        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        tasks.push(task);
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        input.value = "";
+        loadTasks();
+      }
+    }
+
+    function deleteTask(index) {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks.splice(index, 1);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+      loadTasks();
+    }
+
+    
+    const products = [
+      { name: "Laptop", category: "Electronics", price: 900 },
+      { name: "Book A", category: "Books", price: 20 },
+      { name: "Headphones", category: "Electronics", price: 150 },
+      { name: "Book B", category: "Books", price: 30 }
+    ];
+
+    function showProducts(items) {
+      const productList = document.getElementById("productList");
+      productList.innerHTML = "";
+      items.forEach(product => {
+        const div = document.createElement("div");
+        div.className = "product";
+        div.textContent = `${product.name} - $${product.price}`;
+        productList.appendChild(div);
+      });
+    }
+
+    function filterProducts() {
+      const value = document.getElementById("filter").value;
+      if (value === "all") {
+        showProducts(products);
+      } else {
+        showProducts(products.filter(p => p.category === value));
+      }
+    }
+
+    window.onload = function () {
+      loadTasks();
+      showProducts(products);
+    };
+  </script>
+</body>
+</html>
